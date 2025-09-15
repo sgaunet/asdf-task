@@ -142,6 +142,50 @@ list_all_versions() {
 	list_github_tags
 }
 
+# Resolve version string to actual version number
+# Handles "latest" by resolving to the actual latest stable version
+# Arguments:
+#   $1 - Version string (could be "latest" or actual version)
+# Output: Actual version number to stdout
+# Returns: 0 on success, 1 on failure
+resolve_version() {
+	local version="$1"
+
+	if [[ "$version" == "latest" ]]; then
+		debug_log "Resolving 'latest' to actual version"
+
+		# Try to get latest stable version using the same logic as bin/latest-stable
+		local latest_version=""
+
+		# Try GitHub API first
+		local api_url="https://api.github.com/repos/go-task/task/releases/latest"
+		build_curl_opts
+
+		if latest_version=$(curl_with_retry "${curl_opts[@]}" "$api_url" 2>/dev/null | grep '"tag_name"' | sed -E 's/.*"tag_name": *"v?([^"]+)".*/\1/'); then
+			if [[ -n "$latest_version" ]]; then
+				debug_log "Resolved 'latest' to: $latest_version"
+				echo "$latest_version"
+				return 0
+			fi
+		fi
+
+		# Fallback: get from full version list
+		if latest_version=$(list_all_versions | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort_versions | tail -n1); then
+			if [[ -n "$latest_version" ]]; then
+				debug_log "Resolved 'latest' to: $latest_version"
+				echo "$latest_version"
+				return 0
+			fi
+		fi
+
+		fail "Could not resolve 'latest' version. Please check your internet connection."
+	else
+		# Return the version as-is for validation
+		echo "$version"
+		return 0
+	fi
+}
+
 # Validate semantic version format
 # Arguments:
 #   $1 - Version string to validate
@@ -315,11 +359,16 @@ verify_checksum() {
 # Returns:
 #   0 on success, exits on failure
 download_release() {
-	local version="$1"
+	local input_version="$1"
 	local filename="$2"
-	local os arch url
+	local os arch url version
 
-	# Validate version format
+	# Resolve version (handles "latest" -> actual version)
+	if ! version=$(resolve_version "$input_version"); then
+		fail "Could not resolve version: $input_version"
+	fi
+
+	# Validate resolved version format
 	if ! validate_version "$version"; then
 		fail "Invalid version format: $version"
 	fi
@@ -365,15 +414,21 @@ download_release() {
 #   0 on success, exits on failure
 install_version() {
 	local install_type="$1"
-	local version="$2"
+	local input_version="$2"
 	local install_path="${3%/bin}/bin"
+	local version
 
 	# Validate installation type
 	if [[ "$install_type" != "version" ]]; then
 		fail "asdf-$TOOL_NAME supports release installs only (got: $install_type)"
 	fi
 
-	# Validate version
+	# Resolve version (handles "latest" -> actual version)
+	if ! version=$(resolve_version "$input_version"); then
+		fail "Could not resolve version: $input_version"
+	fi
+
+	# Validate resolved version
 	if ! validate_version "$version"; then
 		fail "Invalid version format: $version"
 	fi

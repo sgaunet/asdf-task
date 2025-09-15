@@ -119,11 +119,19 @@ post_install_validation() {
 
 main() {
 	local install_type="$ASDF_INSTALL_TYPE"
-	local version="$ASDF_INSTALL_VERSION"
+	local input_version="$ASDF_INSTALL_VERSION"
 	local install_path="$ASDF_INSTALL_PATH"
+	local version
+
+	# Resolve version (handles "latest" -> actual version)
+	if ! version=$(resolve_version "$input_version"); then
+		fail "Could not resolve version: $input_version"
+	fi
 
 	info "Installing $TOOL_NAME $version..."
 	debug_log "Install type: $install_type"
+	debug_log "Input version: $input_version"
+	debug_log "Resolved version: $version"
 	debug_log "Install path: $install_path"
 	debug_log "Download path: ${DOWNLOAD_PATH:-<not set>}"
 	debug_log "Concurrency: $CONCURRENCY"
@@ -143,9 +151,9 @@ main() {
 	fi
 
 	# Perform the installation
-	install_version "$install_type" "$version" "$install_path"
+	install_version "$install_type" "$input_version" "$install_path"
 
-	# Post-installation validation
+	# Post-installation validation - use resolved version for comparison
 	if ! post_install_validation "$install_path/bin" "$version"; then
 		fail "Post-installation validation failed"
 	fi
