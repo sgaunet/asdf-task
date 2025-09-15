@@ -1,8 +1,6 @@
 # asdf-task
 
 [![Build](https://github.com/sgaunet/asdf-task/actions/workflows/build.yml/badge.svg)](https://github.com/sgaunet/asdf-task/actions/workflows/build.yml)
-[![Lint](https://github.com/sgaunet/asdf-task/actions/workflows/lint.yml/badge.svg)](https://github.com/sgaunet/asdf-task/actions/workflows/lint.yml)
-
 [Task](https://github.com/go-task/task) plugin for the [asdf version manager](https://asdf-vm.com).
 
 Task is a task runner / build tool that aims to be simpler and easier to use than, for example, GNU Make.
