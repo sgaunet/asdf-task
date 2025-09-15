@@ -14,7 +14,7 @@ DOCUMENTATION:
     https://github.com/go-task/task
 
   Plugin Repository:
-    https://github.com/particledecay/asdf-task
+    https://github.com/sgaunet/asdf-task
 
   asdf Documentation:
     https://asdf-vm.com
@@ -53,7 +53,7 @@ SUPPORT:
     https://github.com/go-task/task/issues
 
   Plugin Issues:
-    https://github.com/particledecay/asdf-task/issues
+    https://github.com/sgaunet/asdf-task/issues
 
   asdf Issues:
     https://github.com/asdf-vm/asdf/issues

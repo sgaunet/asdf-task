@@ -22,7 +22,7 @@ Key architectural patterns:
 ### Testing
 ```bash
 # Test the plugin locally
-asdf plugin test task https://github.com/particledecay/asdf-task "task --version"
+asdf plugin test task https://github.com/sgaunet/asdf-task "task --version"
 ```
 
 ### Linting
