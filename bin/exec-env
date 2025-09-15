@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+# Exit on error, undefined variable, or pipe failure
+set -euo pipefail
+
+# ============================================================================
+# Script Setup
+# ============================================================================
+
+# Get the directory of this script and the plugin root
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+
+# Source shared utility functions
+# shellcheck source=./lib/utils.bash
+source "${plugin_dir}/lib/utils.bash"
+
+# ============================================================================
+# Environment Configuration
+# ============================================================================
+
+# Set Task-specific environment variables
+# This script is called by asdf before executing the tool
+main() {
+	# Get the installation path
+	local install_path="${ASDF_INSTALL_PATH:-}"
+
+	if [[ -z "$install_path" ]]; then
+		debug_log "ASDF_INSTALL_PATH not set, exec-env running in check mode"
+		return 0
+	fi
+
+	debug_log "Setting environment for $TOOL_NAME at $install_path"
+
+	# Set TASK_X variables for better Task experience
+	# These are optional but enhance functionality
+
+	# Enable colored output if terminal supports it
+	if [[ -t 1 ]] && [[ -t 2 ]]; then
+		export TASK_COLOR_OUTPUT=1
+		debug_log "Enabled colored output for Task"
+	fi
+
+	# Set default Taskfile names to search for
+	# Task looks for these files in order: Taskfile.yml, Taskfile.yaml, Taskfile.dist.yml, Taskfile.dist.yaml
+	# This is already the default behavior, but can be customized here if needed
+	# export TASK_X_DEFAULT_TASKFILES="Taskfile.yml,Taskfile.yaml"
+
+	# Enable remote Taskfiles feature (experimental)
+	# Allows running Taskfiles from remote URLs
+	# export TASK_X_REMOTE_TASKFILES=1
+
+	# Set default output style
+	# Options: interleaved (default), group, prefixed
+	# export TASK_X_OUTPUT=interleaved
+
+	# Enable verbose mode for debugging (only if ASDF_TASK_DEBUG is set)
+	if [[ "${ASDF_TASK_DEBUG:-0}" == "1" ]]; then
+		export TASK_X_VERBOSE=1
+		debug_log "Enabled verbose mode for Task"
+	fi
+
+	# Set concurrency level based on available cores
+	if [[ -z "${TASK_X_PARALLEL:-}" ]]; then
+		if command -v nproc >/dev/null 2>&1; then
+			# Linux
+			export TASK_X_PARALLEL=$(nproc)
+		elif command -v sysctl >/dev/null 2>&1; then
+			# macOS
+			export TASK_X_PARALLEL=$(sysctl -n hw.ncpu)
+		else
+			# Default to 4 if we can't detect
+			export TASK_X_PARALLEL=4
+		fi
+		debug_log "Set Task parallel execution to $TASK_X_PARALLEL cores"
+	fi
+
+	# Set default shell for Task commands
+	# This ensures consistent behavior across platforms
+	if [[ -z "${TASK_X_SHELL:-}" ]]; then
+		if [[ -n "${SHELL:-}" ]]; then
+			export TASK_X_SHELL="$SHELL"
+		else
+			export TASK_X_SHELL="/bin/bash"
+		fi
+		debug_log "Set Task shell to $TASK_X_SHELL"
+	fi
+
+	# Set Task cache directory (for remote Taskfiles)
+	if [[ -z "${TASK_X_CACHE_DIR:-}" ]]; then
+		export TASK_X_CACHE_DIR="${HOME}/.cache/task"
+		debug_log "Set Task cache directory to $TASK_X_CACHE_DIR"
+	fi
+
+	debug_log "Task environment configuration completed"
+}
+
+# ============================================================================
+# Script Execution
+# ============================================================================
+
+# Run main function
+main "$@"

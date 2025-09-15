@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+# Display plugin overview and basic usage information
+
+cat <<EOF
+asdf-task Plugin
+
+Task is a task runner / build tool that aims to be simpler and easier to use than GNU Make.
+
+Plugin repository: https://github.com/particledecay/asdf-task
+Task repository:   https://github.com/go-task/task
+Task website:      https://taskfile.dev
+
+BASIC USAGE:
+
+  Install the plugin:
+    asdf plugin add task
+    # or
+    asdf plugin add task https://github.com/particledecay/asdf-task.git
+
+  Install a version:
+    asdf install task latest      # Install latest stable version
+    asdf install task 3.31.0       # Install specific version
+
+  Set a version:
+    asdf global task latest        # Set globally
+    asdf local task 3.31.0         # Set for current directory
+
+  List versions:
+    asdf list task                 # List installed versions
+    asdf list-all task             # List all available versions
+
+ENVIRONMENT VARIABLES:
+
+  ASDF_TASK_DEBUG=1               Enable debug output
+  ASDF_TASK_MAX_RETRIES=3         Max retry attempts for network operations
+  ASDF_TASK_RETRY_DELAY=2         Delay in seconds between retries
+  GITHUB_API_TOKEN=<token>        GitHub token for higher API rate limits
+
+TROUBLESHOOTING:
+
+  Enable debug mode:
+    export ASDF_TASK_DEBUG=1
+    asdf install task latest
+
+  If you encounter rate limiting:
+    export GITHUB_API_TOKEN=your_github_token
+    asdf install task latest
+
+For more help, see:
+  https://github.com/particledecay/asdf-task
+  https://asdf-vm.com
+EOF
