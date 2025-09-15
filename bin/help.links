@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# Display useful links and resources
+
+cat <<EOF
+asdf-task Plugin - Useful Links
+
+DOCUMENTATION:
+
+  Task Documentation:
+    https://taskfile.dev
+
+  Task GitHub Repository:
+    https://github.com/go-task/task
+
+  Plugin Repository:
+    https://github.com/particledecay/asdf-task
+
+  asdf Documentation:
+    https://asdf-vm.com
+
+GETTING STARTED:
+
+  Task Quick Start:
+    https://taskfile.dev/quick-start/
+
+  Task Installation Guide:
+    https://taskfile.dev/installation/
+
+  Task Usage Guide:
+    https://taskfile.dev/usage/
+
+  Task API Reference:
+    https://taskfile.dev/api/
+
+EXAMPLES & TUTORIALS:
+
+  Task Examples:
+    https://github.com/go-task/task/tree/main/docs/static/examples
+
+  Taskfile Schema:
+    https://json-schema.org/draft/2020-12/schema
+
+  Community Taskfiles:
+    https://github.com/topics/taskfile
+
+SUPPORT:
+
+  Task Discussions:
+    https://github.com/go-task/task/discussions
+
+  Task Issues:
+    https://github.com/go-task/task/issues
+
+  Plugin Issues:
+    https://github.com/particledecay/asdf-task/issues
+
+  asdf Issues:
+    https://github.com/asdf-vm/asdf/issues
+
+CONTRIBUTING:
+
+  Contributing to Task:
+    https://github.com/go-task/task/blob/main/CONTRIBUTING.md
+
+  Contributing to Plugin:
+    See README.md in the plugin repository
+EOF
