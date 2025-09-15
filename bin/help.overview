@@ -7,7 +7,7 @@ asdf-task Plugin
 
 Task is a task runner / build tool that aims to be simpler and easier to use than GNU Make.
 
-Plugin repository: https://github.com/particledecay/asdf-task
+Plugin repository: https://github.com/sgaunet/asdf-task
 Task repository:   https://github.com/go-task/task
 Task website:      https://taskfile.dev
 
@@ -16,7 +16,7 @@ BASIC USAGE:
   Install the plugin:
     asdf plugin add task
     # or
-    asdf plugin add task https://github.com/particledecay/asdf-task.git
+    asdf plugin add task https://github.com/sgaunet/asdf-task.git
 
   Install a version:
     asdf install task latest      # Install latest stable version
@@ -48,6 +48,6 @@ TROUBLESHOOTING:
     asdf install task latest
 
 For more help, see:
-  https://github.com/particledecay/asdf-task
+  https://github.com/sgaunet/asdf-task
   https://asdf-vm.com
 EOF

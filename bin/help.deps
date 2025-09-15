@@ -48,5 +48,5 @@ This plugin supports the following platforms:
   - NetBSD (amd64, arm64, 386)
 
 For issues or questions:
-  https://github.com/particledecay/asdf-task/issues
+  https://github.com/sgaunet/asdf-task/issues
 EOF
